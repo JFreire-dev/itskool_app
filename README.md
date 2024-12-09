@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+HEAD
 # itskool_app
 =======
 # itskool_app
