@@ -7,19 +7,22 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Inicio'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Bienvenido a la pantalla Home',
-                style: TextStyle(fontSize: 24)),
+            const Text(
+              'Bienvenido a la pantalla principal',
+              style: TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cerrar sesión'),
+              child: const Text('Cerrar Sesión'),
             ),
           ],
         ),
