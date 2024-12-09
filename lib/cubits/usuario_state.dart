@@ -1,30 +1,29 @@
-part of 'usuario_cubit.dart';
+import 'package:equatable/equatable.dart';
+import '../models/usuario.dart';
 
 abstract class UsuarioState extends Equatable {
-  const UsuarioState();
-
   @override
   List<Object?> get props => [];
 }
 
-class UsuarioInicial extends UsuarioState {}
+class UsuarioInitial extends UsuarioState {}
 
 class UsuarioCargando extends UsuarioState {}
 
 class UsuarioAutenticado extends UsuarioState {
   final Usuario usuario;
 
-  const UsuarioAutenticado({required this.usuario});
+  UsuarioAutenticado(this.usuario);
 
   @override
   List<Object?> get props => [usuario];
 }
 
 class UsuarioError extends UsuarioState {
-  final String mensaje;
+  final String error;
 
-  const UsuarioError({required this.mensaje});
+  UsuarioError(this.error);
 
   @override
-  List<Object?> get props => [mensaje];
+  List<Object?> get props => [error];
 }
