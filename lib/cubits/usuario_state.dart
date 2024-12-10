@@ -8,8 +8,6 @@ abstract class UsuarioState extends Equatable {
 
 class UsuarioInitial extends UsuarioState {}
 
-class UsuarioCargando extends UsuarioState {}
-
 class UsuarioAutenticado extends UsuarioState {
   final Usuario usuario;
 
@@ -20,10 +18,10 @@ class UsuarioAutenticado extends UsuarioState {
 }
 
 class UsuarioError extends UsuarioState {
-  final String error;
+  final String mensaje;
 
-  UsuarioError(this.error);
+  UsuarioError(this.mensaje);
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [mensaje];
 }

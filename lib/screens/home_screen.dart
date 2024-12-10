@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'cursos_screen.dart';
-import 'asignaturas_screen.dart';
-import 'evaluaciones_screen.dart';
-import 'perfil_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import './cursos_screen.dart';
+import './asignaturas_screen.dart';
+import './evaluaciones_screen.dart';
+import './perfil_screen.dart';
+import '../cubits/usuario_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  int _currentIndex = 0;
 
   final List<Widget> _screens = [
     const CursosScreen(),
@@ -21,58 +23,47 @@ class _HomeScreenState extends State<HomeScreen> {
     const PerfilScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final usuarioCubit = context.read<UsuarioCubit>();
 
     return Scaffold(
-      body: Row(
-        children: [
-          // Sidebar navigation
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onItemTapped,
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            selectedIconTheme: IconThemeData(
-              color: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(
+        title: BlocBuilder<UsuarioCubit, UsuarioState>(
+          builder: (context, state) {
+            if (state is UsuarioAutenticado) {
+              return Text('Bienvenido, ${state.usuario.nombre}');
+            }
+            return const Text('Home');
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              usuarioCubit.cerrarSesion();
+              Navigator.pushReplacementNamed(context, '/');
+            },
+            child: const Text(
+              'Cerrar Sesión',
+              style: TextStyle(color: Colors.white),
             ),
-            unselectedIconTheme: IconThemeData(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            labelType: NavigationRailLabelType.none,
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.class_),
-                selectedIcon: Icon(Icons.class_),
-                label: Text('Cursos'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.book),
-                selectedIcon: Icon(Icons.book),
-                label: Text('Asignaturas'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.assignment),
-                selectedIcon: Icon(Icons.assignment),
-                label: Text('Evaluaciones'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.person),
-                selectedIcon: Icon(Icons.person),
-                label: Text('Perfil'),
-              ),
-            ],
           ),
-          // Main content
-          Expanded(
-            child: _screens[_selectedIndex],
-          ),
+        ],
+      ),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.class_), label: 'Cursos'),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Asignaturas'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.assignment), label: 'Evaluaciones'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
     );
