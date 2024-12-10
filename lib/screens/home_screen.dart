@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import './cursos_screen.dart';
-import './asignaturas_screen.dart';
-import './evaluaciones_screen.dart';
-import './perfil_screen.dart';
 import '../cubits/usuario_cubit.dart';
+import '../cubits/usuario_state.dart';
+import 'cursos_screen.dart';
+import 'asignaturas_screen.dart';
+import 'evaluaciones_screen.dart';
+import 'perfil_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -38,15 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         actions: [
-          TextButton(
+          IconButton(
+            icon: const Icon(Icons.logout),
             onPressed: () {
               usuarioCubit.cerrarSesion();
               Navigator.pushReplacementNamed(context, '/');
             },
-            child: const Text(
-              'Cerrar Sesión',
-              style: TextStyle(color: Colors.white),
-            ),
           ),
         ],
       ),
@@ -59,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.class_), label: 'Cursos'),
+          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Cursos'),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Asignaturas'),
           BottomNavigationBarItem(
               icon: Icon(Icons.assignment), label: 'Evaluaciones'),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'config/app_router.dart';
-import 'cubits/usuario_cubit.dart';
+import './cubits/usuario_cubit.dart';
+import './screens/login_screen.dart';
+import './screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,11 +14,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UsuarioCubit(),
+      create: (_) => UsuarioCubit(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: AppRouter.generateRoute,
+        title: 'Itskool App',
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
         initialRoute: '/',
+        routes: {
+          '/': (context) => const LoginScreen(),
+          '/home': (context) => const HomeScreen(),
+        },
       ),
     );
   }

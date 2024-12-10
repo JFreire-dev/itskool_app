@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubits/usuario_cubit.dart'; // Contiene el Cubit
-import '../cubits/usuario_state.dart'; // Contiene los estados
+import '../cubits/usuario_cubit.dart';
+import '../cubits/usuario_state.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/home');
           } else if (state is UsuarioError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error)),
+              SnackBar(content: Text(state.mensaje)),
             );
           }
         },
@@ -35,15 +35,14 @@ class LoginScreen extends StatelessWidget {
               TextField(
                 controller: emailController,
                 decoration:
-                    const InputDecoration(labelText: 'Correo Electrónico'),
+                    const InputDecoration(labelText: 'Correo electrónico'),
               ),
-              const SizedBox(height: 16),
               TextField(
                 controller: passwordController,
                 decoration: const InputDecoration(labelText: 'Contraseña'),
                 obscureText: true,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               BlocBuilder<UsuarioCubit, UsuarioState>(
                 builder: (context, state) {
                   if (state is UsuarioCargando) {
