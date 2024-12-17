@@ -1,7 +1,7 @@
 // Archivo: /lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import '../models/usuario.dart';
-import '../models/docente.dart';
+import '../models/profesor.dart';
 import '../models/estudiante.dart';
 import '../models/apoderado.dart';
 import '../widgets/cursos_widget.dart';
@@ -18,11 +18,11 @@ class HomeScreen extends StatelessWidget {
     Widget contenidoDinamico;
 
     // Determinamos el contenido dinámico según el tipo de usuario
-    if (usuario is Docente) {
-      final docente = usuario as Docente;
+    if (usuario is Profesor) {
+      final profesor = usuario as Profesor;
       contenidoDinamico = CursosWidget(
-        cursos: docente.cursos,
-        cursoAdmin: docente.cursoAdmin,
+        cursos: profesor.cursos,
+        cursoAdmin: profesor.cursoAdmin,
       );
     } else if (usuario is Estudiante) {
       final estudiante = usuario as Estudiante;

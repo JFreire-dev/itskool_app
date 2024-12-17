@@ -39,15 +39,48 @@ class FirebaseAuthService {
   }
 
   /// Método para iniciar sesión
+  /// Método para iniciar sesión
   Future<String?> iniciarSesion({
     required String email,
     required String password,
   }) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return null; // Login exitoso
+      // Intentar iniciar sesión
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Verificar si se obtuvo el usuario correctamente
+      final user = userCredential.user;
+      if (user != null) {
+        print("Usuario autenticado exitosamente:");
+        print("UID: ${user.uid}");
+        print("Email: ${user.email}");
+        return null; // Login exitoso
+      } else {
+        print("Error: No se pudo obtener el usuario.");
+        return "Error: No se pudo obtener el usuario.";
+      }
     } on FirebaseAuthException catch (e) {
-      return e.message; // Retornar el error en caso de fallo
+      print("FirebaseAuth Error: ${e.message}");
+      return e.message; // Retornar el mensaje de error
+    } catch (e) {
+      print("Error desconocido al iniciar sesión: $e");
+      return "Error desconocido: $e";
+    }
+  }
+
+  Future<Map<String, dynamic>?> obtenerDatosUsuario(String uid) async {
+    try {
+      final doc = await _firestore.collection('usuarios').doc(uid).get();
+      if (doc.exists) {
+        return doc.data();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception("Error al obtener los datos del usuario: $e");
     }
   }
 

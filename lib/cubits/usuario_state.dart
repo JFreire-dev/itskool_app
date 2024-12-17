@@ -20,10 +20,10 @@ class UsuarioAutenticado extends UsuarioState {
 }
 
 class UsuarioError extends UsuarioState {
-  final String error;
+  final String mensaje; // Solo un mensaje de error
 
-  UsuarioError(this.error);
+  UsuarioError(this.mensaje);
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [mensaje];
 }
