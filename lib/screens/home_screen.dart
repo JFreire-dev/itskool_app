@@ -1,4 +1,3 @@
-// Archivo: /lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import '../models/usuario.dart';
 import '../models/profesor.dart';
@@ -7,6 +6,7 @@ import '../models/apoderado.dart';
 import '../widgets/cursos_widget.dart';
 import '../widgets/asignaturas_widget.dart';
 import '../widgets/alumnos_widget.dart';
+import '../widgets/crear_curso_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   final Usuario usuario;
@@ -20,9 +20,27 @@ class HomeScreen extends StatelessWidget {
     // Determinamos el contenido dinámico según el tipo de usuario
     if (usuario is Profesor) {
       final profesor = usuario as Profesor;
-      contenidoDinamico = CursosWidget(
-        cursos: profesor.cursos,
-        cursoAdmin: profesor.cursoAdmin,
+      contenidoDinamico = Column(
+        children: [
+          // Widget para mostrar cursos del profesor
+          CursosWidget(
+            cursos: profesor.cursos,
+            cursoAdmin: profesor.cursoAdmin,
+          ),
+          const SizedBox(height: 16),
+          // Botón para "Crear Curso" (visible sólo si no tiene cursoAdmin)
+          if (profesor.cursoAdmin == null)
+            ElevatedButton.icon(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => const CrearCursoWidget(),
+                );
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Crear Curso'),
+            ),
+        ],
       );
     } else if (usuario is Estudiante) {
       final estudiante = usuario as Estudiante;
@@ -43,26 +61,17 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // Fondo blanco
-        title: const Text(
-          'Home',
-          style: TextStyle(color: Colors.black), // Título en negro
-        ),
+        title: const Text('Home'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/'); // Cerrar sesión
+              Navigator.pushReplacementNamed(context, '/');
             },
-            icon: const Icon(
-              Icons.logout, // Ícono de cerrar sesión (flecha con puerta)
-              size: 28, // Ajusta el tamaño del ícono si lo necesitas
-              color: Colors.black, // Ícono en color negro
-            ),
-            tooltip: 'Cerrar sesión', // Muestra el tooltip al pasar el mouse
+            icon: const Icon(Icons.logout),
+            tooltip: 'Cerrar sesión',
+            color: Colors.black, // Botón negro
           ),
         ],
-        iconTheme:
-            const IconThemeData(color: Colors.black), // Otros íconos en negro
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
