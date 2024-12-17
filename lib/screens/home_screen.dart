@@ -6,7 +6,7 @@ import '../models/estudiante.dart';
 import '../models/apoderado.dart';
 import '../widgets/cursos_widget.dart';
 import '../widgets/asignaturas_widget.dart';
-import '../widgets/pupilos_widget.dart';
+import '../widgets/alumnos_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   final Usuario usuario;
@@ -43,19 +43,26 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        backgroundColor: Colors.white, // Fondo blanco
+        title: const Text(
+          'Home',
+          style: TextStyle(color: Colors.black), // Título en negro
+        ),
         actions: [
-          TextButton.icon(
+          IconButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/'); // Cerrar sesión
             },
-            icon: const Icon(Icons.logout),
-            label: const Text('Cerrar sesión'),
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.white, // Corregido aquí
+            icon: const Icon(
+              Icons.logout, // Ícono de cerrar sesión (flecha con puerta)
+              size: 28, // Ajusta el tamaño del ícono si lo necesitas
+              color: Colors.black, // Ícono en color negro
             ),
+            tooltip: 'Cerrar sesión', // Muestra el tooltip al pasar el mouse
           ),
         ],
+        iconTheme:
+            const IconThemeData(color: Colors.black), // Otros íconos en negro
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
