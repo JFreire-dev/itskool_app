@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "765424169022",
+    "project_id": "itskool-526ed",
+    "storage_bucket": "itskool-526ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765424169022:android:8396b819e61e86c2b4216f",
+        "android_client_info": {
+          "package_name": "com.itskool.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV08pW-JszjPctget2pzd7GVI5pfX85Uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765424169022:android:fc4621bc457d4d3ab4216f",
+        "android_client_info": {
+          "package_name": "com.mycompany.itskool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV08pW-JszjPctget2pzd7GVI5pfX85Uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

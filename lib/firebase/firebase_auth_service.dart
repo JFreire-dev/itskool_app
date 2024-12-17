@@ -1,0 +1,61 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FirebaseAuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  /// Método para registrar un nuevo usuario
+  Future<void> registrarUsuario({
+    required String email,
+    required String password,
+    required String nombre,
+    required String tipoUsuario,
+  }) async {
+    try {
+      // Crear el usuario en Firebase Authentication
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      print("User UID: ${userCredential.user?.uid}");
+
+      // Guardar datos adicionales del usuario en Firestore
+      await _firestore
+          .collection('usuarios')
+          .doc(userCredential.user!.uid)
+          .set({
+        'nombre': nombre,
+        'email': email,
+        'tipoUsuario': tipoUsuario,
+        'uid': userCredential.user!.uid,
+      });
+    } on FirebaseAuthException catch (e) {
+      print("FirebaseAuth Error: ${e.message}");
+      throw Exception(e.message ?? "Error desconocido");
+    }
+  }
+
+  /// Método para iniciar sesión
+  Future<String?> iniciarSesion({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return null; // Login exitoso
+    } on FirebaseAuthException catch (e) {
+      return e.message; // Retornar el error en caso de fallo
+    }
+  }
+
+  /// Método para cerrar sesión
+  Future<void> cerrarSesion() async {
+    await _auth.signOut();
+  }
+
+  /// Obtener el usuario actual autenticado
+  User? get usuarioActual => _auth.currentUser;
+}
