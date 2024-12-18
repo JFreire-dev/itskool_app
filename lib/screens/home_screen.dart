@@ -1,63 +1,50 @@
 import 'package:flutter/material.dart';
+import '../firebase/firebase_curso_service.dart';
 import '../models/usuario.dart';
 import '../models/profesor.dart';
-import '../models/estudiante.dart';
-import '../models/apoderado.dart';
 import '../widgets/cursos_widget.dart';
-import '../widgets/asignaturas_widget.dart';
-import '../widgets/alumnos_widget.dart';
 import '../widgets/crear_curso_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final Usuario usuario;
 
   const HomeScreen({super.key, required this.usuario});
 
   @override
-  Widget build(BuildContext context) {
-    Widget contenidoDinamico;
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    // Determinamos el contenido dinámico según el tipo de usuario
-    if (usuario is Profesor) {
-      final profesor = usuario as Profesor;
-      contenidoDinamico = Column(
-        children: [
-          // Widget para mostrar cursos del profesor
-          CursosWidget(
-            cursos: profesor.cursos,
-            cursoAdmin: profesor.cursoAdmin,
-          ),
-          const SizedBox(height: 16),
-          // Botón para "Crear Curso" (visible sólo si no tiene cursoAdmin)
-          if (profesor.cursoAdmin == null)
-            ElevatedButton.icon(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => const CrearCursoWidget(),
-                );
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Crear Curso'),
-            ),
-        ],
-      );
-    } else if (usuario is Estudiante) {
-      final estudiante = usuario as Estudiante;
-      contenidoDinamico = AsignaturasWidget(
-        curso: estudiante.curso,
-        asignaturas: const ['Matemáticas', 'Lenguaje', 'Historia'], // Ejemplo
-      );
-    } else if (usuario is Apoderado) {
-      final apoderado = usuario as Apoderado;
-      contenidoDinamico = PupilosWidget(
-        pupilos: apoderado.pupilos,
-      );
-    } else {
-      contenidoDinamico = const Center(
-        child: Text('Tipo de usuario no identificado'),
-      );
+class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> _cursos = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarCursos();
+  }
+
+  Future<void> _cargarCursos() async {
+    if (widget.usuario is Profesor) {
+      final profesor = widget.usuario as Profesor;
+      setState(() => _isLoading = true);
+      final cursos =
+          await FirebaseCursoService().obtenerCursosProfesor(profesor.id);
+      setState(() {
+        _cursos = cursos;
+        _isLoading = false;
+      });
     }
+  }
+
+  // Callback después de crear un curso
+  void _onCursoCreado() {
+    _cargarCursos(); // Refresca los cursos desde Firebase
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final usuario = widget.usuario;
 
     return Scaffold(
       appBar: AppBar(
@@ -67,16 +54,40 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/');
             },
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.black),
             tooltip: 'Cerrar sesión',
-            color: Colors.black, // Botón negro
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: contenidoDinamico,
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                if (usuario is Profesor) ...[
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => CrearCursoWidget(
+                            onCursoCreado: _onCursoCreado,
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Crear Curso'),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Divider(color: Colors.grey[300]),
+                  CursosWidget(
+                    cursos: _cursos,
+                    cursoAdmin: usuario.cursoAdmin,
+                    tipoUsuario: usuario.tipoUsuario, // Añadir tipoUsuario aquí
+                  ),
+                ],
+              ],
+            ),
     );
   }
 }
